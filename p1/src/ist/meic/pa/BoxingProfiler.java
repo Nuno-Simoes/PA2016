@@ -4,17 +4,37 @@ import javassist.*;
 import javassist.expr.ExprEditor;
 import javassist.expr.MethodCall;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.util.HashMap;
+import java.util.Map;
+
 
 public class BoxingProfiler implements Translator {
+    final String mClass;
+
+    public BoxingProfiler(String className) {
+        mClass = className;
+    }
+
     public static void main(String[] args) throws Throwable {
+        String className = "SumIntegers";
+//        if (args.length != 1) {
+        //           BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+        //           className = reader.readLine().split(" ")[0];
+        //      } else {
+        //         className = args[0];
+        //}
+
+
         ClassPool pool = ClassPool.getDefault();
         Loader classLoader = new Loader();
-        classLoader.addTranslator(pool, new BoxingProfiler());
-        classLoader.run("SumIntegers", null);
+        classLoader.addTranslator(pool, new BoxingProfiler(className));
+        classLoader.run(className, null);
 
-        int count = (int) Class.forName("SumIntegers", false, classLoader).getDeclaredField("mIntUnboxingCounter").get(null);
-
-        System.out.println("count: " + count);
+        Object cl = Class.forName(className, false, classLoader).getDeclaredField("mMetric").get(null);
+        System.out.println(cl.toString());
     }
 
 
@@ -27,13 +47,16 @@ public class BoxingProfiler implements Translator {
 
     @Override
     public void onLoad(ClassPool pool, String className) throws NotFoundException, CannotCompileException {
+        if (!className.equals(mClass))
+            return;
+
         System.out.println("onLoad: " + className);
 
         CtClass ct = pool.get(className);
-        CtClass intCt = pool.get(int.class.getName());
-        CtField unboxingCounterField = new CtField(intCt, "mIntUnboxingCounter", ct);
+        CtClass metricCt = pool.get(Metric.class.getName());
+        CtField unboxingCounterField = new CtField(metricCt, "mMetric", ct);
         unboxingCounterField.setModifiers(Modifier.STATIC | Modifier.PUBLIC);
-        ct.addField(unboxingCounterField);
+        ct.addField(unboxingCounterField, CtField.Initializer.byNew(pool.get(Metric.class.getName())));
 
 
         for (CtMethod cm : ct.getDeclaredMethods()) {
@@ -45,10 +68,21 @@ public class BoxingProfiler implements Translator {
         public void edit(MethodCall m) throws CannotCompileException {
             // FIXME: We'll most likely have to also check the signature: valueOf has 3 overloads
             if (m.getClassName().equals(Integer.class.getName()) && m.getMethodName().equals("valueOf")) {
-                m.replace("{ $_ = $0.valueOf($1); System.out.println(\"Hello\");}");
+                m.replace("{ $_ = $0.valueOf($1); " + addMetric(m) + "}");
+
             } else if (m.getClassName().equals(Integer.class.getName()) && m.getMethodName().equals("intValue")) {
-                m.replace("{ $_ = $0.intValue(); mIntUnboxingCounter++; }");
+                m.replace("{ $_ = $0.intValue(); " + addMetric(m) + " }");
             }
+        }
+
+        private String addMetric(MethodCall m) {
+            String op = m.getMethodName().equals("valueOf") ? "Boxed" : "Unboxed";
+            String from = m.where().getLongName();
+            String cl = m.getClassName();
+
+            String inst = String.format(" mMetric.add(\"%s\", \"%s\", ist.meic.pa.Metric.Operation.%s); ", from, cl, op);
+            System.out.println("INST: " + inst);
+            return inst;
         }
     }
 }
