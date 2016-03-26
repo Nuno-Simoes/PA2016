@@ -84,7 +84,7 @@ public class BoxingProfiler implements Translator {
             String cl = m.getClassName();
 
             String inst = String.format(" mMetric.add(\"%s\", \"%s\", ist.meic.pa.Metric.Operation.%s); ", from, cl, op);
-            System.out.println("INST: " + inst);
+            //System.out.println("INST: " + inst);
             return inst;
         }
     }

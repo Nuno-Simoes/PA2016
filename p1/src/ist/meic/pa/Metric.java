@@ -36,12 +36,12 @@ public class Metric {
         public String print(String key) {
             String res = "";
             for (Map.Entry<String, Integer> entry : unboxedMetrics.entrySet()) {
-                res += key + " " + entry.getValue() + " unboxed " + entry.getKey() + "\n";
+                res += key + " unboxed " + entry.getValue() + " " + entry.getKey() + "\n";
             }
            // res = res.substring(0, res.length() - 1);
 
             for (Map.Entry<String, Integer> entry : boxedMetrics.entrySet()) {
-                res += key + " " + entry.getValue() + " boxed " + entry.getKey() + "\n";
+                res += key + " boxed " + entry.getValue() + " " + entry.getKey() + "\n";
             }
             //res = res.substring(0, res.length() - 1);
             return res;
