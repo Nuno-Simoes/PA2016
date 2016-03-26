@@ -23,7 +23,8 @@ public class Metric {
     public String toString() {
         String res = "";
         for (Map.Entry<String, MethodMetrics> entry : metrics.entrySet()) {
-            res += entry.getKey() + " " + entry.getValue().toString() + "\n";
+            //res += entry.getKey() + " " + entry.getValue().toString() + "\n";
+        	res += entry.getValue().print(entry.getKey()) + "\n";
         }
         return res;
     }
@@ -32,11 +33,10 @@ public class Metric {
         private static Map<String, Integer> unboxedMetrics = new HashMap<>();
         private static Map<String, Integer> boxedMetrics = new HashMap<>();
 
-        @Override
-        public String toString() {
+        public String print(String key) {
             String res = "";
             for (Map.Entry<String, Integer> entry : unboxedMetrics.entrySet()) {
-                res += entry.getValue() + " unboxed " + entry.getKey() + "\n";
+                res += key + " " + entry.getValue() + " unboxed " + entry.getKey() + "\n";
             }
            // res = res.substring(0, res.length() - 1);
 
