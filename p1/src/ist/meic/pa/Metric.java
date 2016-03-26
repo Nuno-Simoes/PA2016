@@ -5,7 +5,7 @@ import java.util.Map;
 
 public class Metric {
     public static Map<String, MethodMetrics> metrics = new HashMap<>();
-
+    public static Map<String, Map<String, String>> result = new HashMap();
 
     public static void add(String from, String cl, Operation op) {
         if (!metrics.containsKey(from)) {
@@ -24,9 +24,12 @@ public class Metric {
         String res = "";
         for (Map.Entry<String, MethodMetrics> entry : metrics.entrySet()) {
             //res += entry.getKey() + " " + entry.getValue().toString() + "\n";
+        	result.put(entry.getKey(), new HashMap());
         	res += entry.getValue().print(entry.getKey()) + "\n";
         }
-        return res;
+        
+        res = res.substring(0, res.length() - 2);
+        return result.toString();
     }
 
     public static class MethodMetrics {
@@ -36,11 +39,13 @@ public class Metric {
         public String print(String key) {
             String res = "";
             for (Map.Entry<String, Integer> entry : unboxedMetrics.entrySet()) {
+            	result.get(key).put(entry.getKey(), " unboxed " + entry.getValue());
                 res += key + " unboxed " + entry.getValue() + " " + entry.getKey() + "\n";
             }
            // res = res.substring(0, res.length() - 1);
-
+            
             for (Map.Entry<String, Integer> entry : boxedMetrics.entrySet()) {
+            	result.get(key).put(entry.getKey(), " boxed " + entry.getValue());
                 res += key + " boxed " + entry.getValue() + " " + entry.getKey() + "\n";
             }
             //res = res.substring(0, res.length() - 1);
