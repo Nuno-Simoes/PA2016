@@ -70,9 +70,6 @@ public class BoxingProfiler implements Translator {
         		map.put((Short.class.getName()), "shortValue");
         		map.put((Long.class.getName()), "longValue");
         	
-            	System.out.println(m.getClassName() + "\n");
-            	System.out.println(m.getMethodName() + "\n");
-
             if (map.containsKey(m.getClassName()) && m.getMethodName().equals("valueOf")) {
             	m.replace("{ $_ = $0.valueOf($1); " + addMetric(m) + "}");
             } else if (map.containsKey(m.getClassName()) && 
