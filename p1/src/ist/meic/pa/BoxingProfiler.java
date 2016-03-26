@@ -6,6 +6,8 @@ import javassist.expr.MethodCall;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.util.HashMap;
+import java.util.Map;
 
 public class BoxingProfiler implements Translator {
     final String mClass;
@@ -66,14 +68,7 @@ public class BoxingProfiler implements Translator {
             if (m.getMethodName().equals("valueOf")) {
                 m.replace("{ $_ = $0.valueOf($1); " + addMetric(m) + "}");
 
-            } else if ((m.getClassName().equals(Integer.class.getName()) && m.getMethodName().equals("intValue"))||
-            		(m.getClassName().equals(Boolean.class.getName()) && m.getMethodName().equals("booleanValue"))||
-            		(m.getClassName().equals(Byte.class.getName()) && m.getMethodName().equals("byteValue"))||
-            		(m.getClassName().equals(Character.class.getName()) && m.getMethodName().equals("charValue"))||
-            		(m.getClassName().equals(Double.class.getName()) && m.getMethodName().equals("doubleValue"))||
-            		(m.getClassName().equals(Float.class.getName()) && m.getMethodName().equals("floatValue"))||
-            		(m.getClassName().equals(Short.class.getName()) && m.getMethodName().equals("shortValue"))||
-            		(m.getClassName().equals(Long.class.getName()) && m.getMethodName().equals("longValue"))){ 
+            } else if (isUnboxed(m)){ 
                 m.replace("{ $_ = $0."+m.getMethodName()+"();" + addMetric(m) + " }");
             }
         }
@@ -86,6 +81,23 @@ public class BoxingProfiler implements Translator {
             String inst = String.format(" mMetric.add(\"%s\", \"%s\", ist.meic.pa.Metric.Operation.%s); ", from, cl, op);
             //System.out.println("INST: " + inst);
             return inst;
+        }
+        
+        private boolean isUnboxed(MethodCall m){
+        	final Map<String, String> coiso = new HashMap<>();
+        	coiso.put((Integer.class.getName()), "intValue");
+        	coiso.put((Boolean.class.getName()), "booleanValue");
+        	coiso.put((Byte.class.getName()), "byteValue");
+        	coiso.put((Character.class.getName()), "charValue");
+        	coiso.put((Double.class.getName()), "doubleValue");
+        	coiso.put((Float.class.getName()), "floatValue");
+        	coiso.put((Short.class.getName()), "shortValue");
+        	coiso.put((Long.class.getName()), "longValue");
+        	
+        	if(coiso.containsKey(m.getClassName()) && 
+        			m.getMethodName().equals(coiso.get(m.getClassName())))
+        		return true;
+        	return false;
         }
     }
 }
