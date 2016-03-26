@@ -32,21 +32,17 @@ public class BoxingProfiler implements Translator {
         classLoader.run(className, null);
 
         Object cl = Class.forName(className, false, classLoader).getDeclaredField("mMetric").get(null);
-        System.out.println(cl.toString());
+        System.err.println(cl.toString());
     }
 
 
     @Override
-    public void start(ClassPool pool) throws NotFoundException, CannotCompileException {
-        //System.out.println("start");
-    }
+    public void start(ClassPool pool) throws NotFoundException, CannotCompileException { }
 
     @Override
     public void onLoad(ClassPool pool, String className) throws NotFoundException, CannotCompileException {
         if (!className.equals(mClass))
             return;
-
-        //System.out.println("onLoad: " + className);
 
         CtClass ct = pool.get(className);
         CtClass metricCt = pool.get(Metric.class.getName());
@@ -74,11 +70,13 @@ public class BoxingProfiler implements Translator {
         		map.put((Short.class.getName()), "shortValue");
         		map.put((Long.class.getName()), "longValue");
         	
-            if (map.containsKey(m.getClassName()) && m.getMethodName().equals("valueOf")) {
-                m.replace("{ $_ = $0.valueOf($1); " + addMetric(m) + "}");
+            	System.out.println(m.getClassName() + "\n");
+            	System.out.println(m.getMethodName() + "\n");
 
+            if (map.containsKey(m.getClassName()) && m.getMethodName().equals("valueOf")) {
+            	m.replace("{ $_ = $0.valueOf($1); " + addMetric(m) + "}");
             } else if (map.containsKey(m.getClassName()) && 
-        			m.getMethodName().equals(map.get(m.getClassName()))){ 
+        			m.getMethodName().equals(map.get(m.getClassName()))){
                 m.replace("{ $_ = $0."+m.getMethodName()+"();" + addMetric(m) + " }");
             }
         }
@@ -89,7 +87,6 @@ public class BoxingProfiler implements Translator {
             String cl = m.getClassName();
 
             String inst = String.format(" mMetric.add(\"%s\", \"%s\", ist.meic.pa.Metric.Operation.%s); ", from, cl, op);
-            //System.out.println("INST: " + inst);
             return inst;
         }
     }

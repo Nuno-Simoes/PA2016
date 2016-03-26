@@ -26,13 +26,10 @@ public class Metric {
     public String toString() {
         String res = "";
         for (Map.Entry<String, MethodMetrics> entry : metrics.entrySet()) {
-            //res += entry.getKey() + " " + entry.getValue().toString() + "\n";
         	result.put(entry.getKey(), new TreeMap<>());
         	entry.getValue().print(entry.getKey());
-        	//res += entry.getValue().print(entry.getKey()) + "\n";
         }
         
-        //res = res.substring(0, res.length() - 2);
         for (Map.Entry<String, Map<String, List<String>>> entry : result.entrySet()) {
         	for (Map.Entry<String, List<String>> entry2 : entry.getValue().entrySet()) {
         		for (String element : entry2.getValue())
@@ -40,6 +37,7 @@ public class Metric {
         	}
         }
         
+        //res = res.substring(0, res.length() - 1);        
         return res;
     }
 
@@ -48,37 +46,23 @@ public class Metric {
         private static Map<String, Integer> boxedMetrics = new HashMap<>();
 
         public void print(String key) {
-            //String res = "";
+
         	for (Map.Entry<String, Integer> entry : unboxedMetrics.entrySet()) {
         		result.get(key).put(entry.getKey(), new ArrayList<String>());
         	}
         	
         	for (Map.Entry<String, Integer> entry : boxedMetrics.entrySet()) {
         		result.get(key).put(entry.getKey(), new ArrayList<String>());
-        	}
-        	
-        	for (Map.Entry<String, Integer> entry : unboxedMetrics.entrySet()) {
-        		result.get(key).get(entry.getKey()).add(" unboxed " + entry.getValue());
         	}
         	
         	for (Map.Entry<String, Integer> entry : boxedMetrics.entrySet()) {
         		result.get(key).get(entry.getKey()).add(" boxed " + entry.getValue());
         	}
         	
-        	/*for (Map.Entry<String, Integer> entry : unboxedMetrics.entrySet()) {
-        		result.get(key).put(entry.getKey(), " unboxed " + entry.getValue());
-                res += key + " unboxed " + entry.getValue() + " " + entry.getKey() + "\n";
-            }
-        	result.get(key).put(new ArrayList<String>());
-            res = res.substring(0, res.length() - 1);
-            
-            for (Map.Entry<String, Integer> entry : boxedMetrics.entrySet()) {
-            	result.get(key).put(entry.getKey(), " boxed " + entry.getValue());
-                res += key + " boxed " + entry.getValue() + " " + entry.getKey() + "\n";
-            }*/
+        	for (Map.Entry<String, Integer> entry : unboxedMetrics.entrySet()) {
+        		result.get(key).get(entry.getKey()).add(" unboxed " + entry.getValue());
+        	}
         	
-            //res = res.substring(0, res.length() - 1);
-            //return res;
         }
 
         void add(String cl, Operation op) {
