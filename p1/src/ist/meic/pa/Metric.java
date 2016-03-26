@@ -35,7 +35,8 @@ public class Metric {
         //res = res.substring(0, res.length() - 2);
         for (Map.Entry<String, Map<String, List<String>>> entry : result.entrySet()) {
         	for (Map.Entry<String, List<String>> entry2 : entry.getValue().entrySet()) {
-        		res += entry.getKey() + " " + entry2.getValue() + " " + entry2.getKey() + "\n";
+        		for (String element : entry2.getValue())
+        		res += entry.getKey() + " " + element + " " + entry2.getKey() + "\n";
         	}
         }
         
