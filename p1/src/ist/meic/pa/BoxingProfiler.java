@@ -64,10 +64,21 @@ public class BoxingProfiler implements Translator {
     	
         public void edit(MethodCall m) throws CannotCompileException {
             // FIXME: We'll most likely have to also check the signature: valueOf has 3 overloads
-            if (m.getMethodName().equals("valueOf")) {
+        	final Map<String, String> map = new HashMap<>();
+        		map.put((Integer.class.getName()), "intValue");
+        		map.put((Boolean.class.getName()), "booleanValue");
+        		map.put((Byte.class.getName()), "byteValue");
+        		map.put((Character.class.getName()), "charValue");
+        		map.put((Double.class.getName()), "doubleValue");
+        		map.put((Float.class.getName()), "floatValue");
+        		map.put((Short.class.getName()), "shortValue");
+        		map.put((Long.class.getName()), "longValue");
+        	
+            if (map.containsKey(m.getClassName()) && m.getMethodName().equals("valueOf")) {
                 m.replace("{ $_ = $0.valueOf($1); " + addMetric(m) + "}");
 
-            } else if (isUnboxed(m)){ 
+            } else if (map.containsKey(m.getClassName()) && 
+        			m.getMethodName().equals(map.get(m.getClassName()))){ 
                 m.replace("{ $_ = $0."+m.getMethodName()+"();" + addMetric(m) + " }");
             }
         }
@@ -80,23 +91,6 @@ public class BoxingProfiler implements Translator {
             String inst = String.format(" mMetric.add(\"%s\", \"%s\", ist.meic.pa.Metric.Operation.%s); ", from, cl, op);
             //System.out.println("INST: " + inst);
             return inst;
-        }
-        
-        private boolean isUnboxed(MethodCall m){
-        	final Map<String, String> map = new HashMap<>();
-        	map.put((Integer.class.getName()), "intValue");
-        	map.put((Boolean.class.getName()), "booleanValue");
-        	map.put((Byte.class.getName()), "byteValue");
-        	map.put((Character.class.getName()), "charValue");
-        	map.put((Double.class.getName()), "doubleValue");
-        	map.put((Float.class.getName()), "floatValue");
-        	map.put((Short.class.getName()), "shortValue");
-        	map.put((Long.class.getName()), "longValue");
-        	
-        	if(map.containsKey(m.getClassName()) && 
-        			m.getMethodName().equals(map.get(m.getClassName())))
-        		return true;
-        	return false;
         }
     }
 }
