@@ -64,7 +64,6 @@ public class BoxingProfiler implements Translator {
     	
         public void edit(MethodCall m) throws CannotCompileException {
             // FIXME: We'll most likely have to also check the signature: valueOf has 3 overloads
-        	
             if (m.getMethodName().equals("valueOf")) {
                 m.replace("{ $_ = $0.valueOf($1); " + addMetric(m) + "}");
 
@@ -84,18 +83,18 @@ public class BoxingProfiler implements Translator {
         }
         
         private boolean isUnboxed(MethodCall m){
-        	final Map<String, String> coiso = new HashMap<>();
-        	coiso.put((Integer.class.getName()), "intValue");
-        	coiso.put((Boolean.class.getName()), "booleanValue");
-        	coiso.put((Byte.class.getName()), "byteValue");
-        	coiso.put((Character.class.getName()), "charValue");
-        	coiso.put((Double.class.getName()), "doubleValue");
-        	coiso.put((Float.class.getName()), "floatValue");
-        	coiso.put((Short.class.getName()), "shortValue");
-        	coiso.put((Long.class.getName()), "longValue");
+        	final Map<String, String> map = new HashMap<>();
+        	map.put((Integer.class.getName()), "intValue");
+        	map.put((Boolean.class.getName()), "booleanValue");
+        	map.put((Byte.class.getName()), "byteValue");
+        	map.put((Character.class.getName()), "charValue");
+        	map.put((Double.class.getName()), "doubleValue");
+        	map.put((Float.class.getName()), "floatValue");
+        	map.put((Short.class.getName()), "shortValue");
+        	map.put((Long.class.getName()), "longValue");
         	
-        	if(coiso.containsKey(m.getClassName()) && 
-        			m.getMethodName().equals(coiso.get(m.getClassName())))
+        	if(map.containsKey(m.getClassName()) && 
+        			m.getMethodName().equals(map.get(m.getClassName())))
         		return true;
         	return false;
         }
