@@ -26,7 +26,7 @@ public class Metric {
     public String toString() {
         String res = "";
         for (Map.Entry<String, MethodMetrics> entry : metrics.entrySet()) {
-        	result.put(entry.getKey(), new TreeMap<>());
+        	result.put(entry.getKey(), new TreeMap<String, List<String>>());
         	entry.getValue().print(entry.getKey());
         }
         
