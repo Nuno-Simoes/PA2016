@@ -10,15 +10,15 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class BoxingProfiler implements Translator {
-    final String mClass;
-    private static String className;
+    private final String mClass;
 
     public BoxingProfiler(String className) {
         mClass = className;
     }
 
     public static void main(String[] args) throws Throwable {
-    	if (args.length != 1) {
+        String className;
+        if (args.length != 1) {
     		BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
             className = reader.readLine().split(" ")[0];
             } else {
