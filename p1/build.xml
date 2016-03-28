@@ -1,16 +1,24 @@
-<project>
+<project default="jar">
+    <property name="jarName" value=".\boxingProfiler.jar"/>
+
+    <path id="dependencies">
+        <pathelement location="lib/javassist.jar"/>
+    </path>
+
+
     <target name="clean">
         <delete dir="build"/>
+        <delete file="${jarName}"/>
     </target>
 
     <target name="compile" depends="clean">
         <mkdir dir="build/classes"/>
-        <javac srcdir="src" destdir="build/classes"/>
+        <javac target="1.7" srcdir="src" classpathref="dependencies" destdir="build/classes"/>
     </target>
 
     <target name="jar" depends="compile">
-        <mkdir dir="build/jar"/>
-        <jar destfile="build/jar/BoxingProfiler.jar" basedir="build/classes">
+
+        <jar destfile="${jarName}" basedir="build/classes">
             <manifest>
                 <attribute name="Main-Class" value="ist.meic.pa.BoxingProfiler"/>
             </manifest>
@@ -18,7 +26,7 @@
     </target>
 
     <target name="run" depends="jar">
-        <java jar="build/jar/BoxingProfiler.jar" fork="true"/>
+        <java jar="${jarName}" fork="true"/>
     </target>
 
 </project>
