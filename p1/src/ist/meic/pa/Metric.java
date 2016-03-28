@@ -56,11 +56,11 @@ public class Metric {
         	}
         	
         	for (Map.Entry<String, Integer> entry : boxedMetrics.entrySet()) {
-        		result.get(key).get(entry.getKey()).add(" boxed " + entry.getValue());
+        		result.get(key).get(entry.getKey()).add("boxed " + entry.getValue());
         	}
         	
         	for (Map.Entry<String, Integer> entry : unboxedMetrics.entrySet()) {
-        		result.get(key).get(entry.getKey()).add(" unboxed " + entry.getValue());
+        		result.get(key).get(entry.getKey()).add("unboxed " + entry.getValue());
         	}
         	
         }
