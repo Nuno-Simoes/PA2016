@@ -19,7 +19,10 @@
     <target name="jar" depends="compile">
 
         <jar destfile="${jarName}" basedir="build/classes">
+            <!-- I guess this is the safest bet -->
+            <zipgroupfileset dir="lib" includes="*.jar"/>
             <manifest>
+                <!-- <attribute name="Class-Path" value="lib/javassist.jar"/> -->
                 <attribute name="Main-Class" value="ist.meic.pa.BoxingProfiler"/>
             </manifest>
         </jar>
