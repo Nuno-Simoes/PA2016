@@ -1,0 +1,47 @@
+TestF.identity(boolean) boxed 1 java.lang.Boolean
+
+TestF.identity(byte) boxed 1 java.lang.Byte
+
+TestF.identity(char) boxed 1 java.lang.Character
+
+TestF.identity(double) boxed 1 java.lang.Double
+
+TestF.identity(float) boxed 1 java.lang.Float
+
+TestF.identity(int) boxed 1 java.lang.Integer
+
+TestF.identity(long) boxed 1 java.lang.Long
+
+TestF.identity(short) boxed 1 java.lang.Short
+
+TestF.main(java.lang.String[]) boxed 2 java.lang.Boolean
+
+TestF.main(java.lang.String[]) unboxed 2 java.lang.Boolean
+
+TestF.main(java.lang.String[]) boxed 2 java.lang.Byte
+
+TestF.main(java.lang.String[]) unboxed 2 java.lang.Byte
+
+TestF.main(java.lang.String[]) boxed 2 java.lang.Character
+
+TestF.main(java.lang.String[]) unboxed 2 java.lang.Character
+
+TestF.main(java.lang.String[]) boxed 2 java.lang.Double
+
+TestF.main(java.lang.String[]) unboxed 2 java.lang.Double
+
+TestF.main(java.lang.String[]) boxed 2 java.lang.Float
+
+TestF.main(java.lang.String[]) unboxed 2 java.lang.Float
+
+TestF.main(java.lang.String[]) boxed 2 java.lang.Integer
+
+TestF.main(java.lang.String[]) unboxed 2 java.lang.Integer
+
+TestF.main(java.lang.String[]) boxed 2 java.lang.Long
+
+TestF.main(java.lang.String[]) unboxed 2 java.lang.Long
+
+TestF.main(java.lang.String[]) boxed 2 java.lang.Short
+
+TestF.main(java.lang.String[]) unboxed 2 java.lang.Short
