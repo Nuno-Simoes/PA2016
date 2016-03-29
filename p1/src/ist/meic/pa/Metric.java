@@ -42,8 +42,8 @@ public class Metric {
     }
 
     public static class MethodMetrics {
-        private static Map<String, Integer> unboxedMetrics = new HashMap<>();
-        private static Map<String, Integer> boxedMetrics = new HashMap<>();
+        private Map<String, Integer> unboxedMetrics = new HashMap<>();
+        private Map<String, Integer> boxedMetrics = new HashMap<>();
 
         public void print(String key) {
 
