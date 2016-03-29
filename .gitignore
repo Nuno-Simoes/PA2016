@@ -8,3 +8,9 @@
 hs_err_pid*
 /derby.log
 
+.idea/
+*.iml
+.jar
+
+#OSX generated files 
+.DS_Store
