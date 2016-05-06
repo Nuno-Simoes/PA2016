@@ -12,7 +12,7 @@ import java.lang.reflect.Type;
 public class GFMethod {
     private final Method mMethod;
 
-    GFMethod() {
+    public GFMethod() {
         Method fMethod = null;
         for (Method method : getClass().getDeclaredMethods()) {
             boolean isValid = method.getName().equals("call") && (method.getReturnType().equals(Object.class) || method.getReturnType().equals(void.class));
@@ -51,6 +51,7 @@ public class GFMethod {
 
     public Object invoke(Object[] args) {
         try {
+            mMethod.setAccessible(true);
             return mMethod.invoke(this, args);
         } catch (IllegalAccessException | InvocationTargetException e) {
             e.printStackTrace();
