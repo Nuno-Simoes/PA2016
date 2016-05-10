@@ -3,11 +3,19 @@ package ist.meic.pa.GenericFunctions;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
-import java.lang.reflect.Type;
 
 /*
  * FIXME: REMOVE THESE DOUBTS!!!
  *  - Java allows for GFMethod to have several methods. Can we assume there will only be one?!
+ *
+ *  XXX: Notes
+ *   The before methods are run in most-specific-first order while the after methods are run in least-specific-first order.
+ *   The design rationale for this difference can be illustrated with an example.
+ *   Suppose class C1 modifies the behavior of its superclass, C2, by adding before methods and after methods. Whether
+ *   the behavior of the class C2 is defined directly by methods on C2 or is inherited from its superclasses does not
+ *   affect the relative order of invocation of methods on instances of the class C1.
+ *   Class C1's before method runs before all of class C2's methods.
+ *   Class C1's after method runs after all of class C2's methods.
  */
 public class GFMethod {
     private final Method mMethod;
@@ -30,24 +38,60 @@ public class GFMethod {
         return mMethod.getParameters();
     }
 
-    public boolean isMoreSpecialized(Object[] args, GFMethod effectiveMethod) {
+
+    public boolean isSuibtable(Object[] args) {
         Parameter[] myParameters = getParameters();
 
         for (int i = 0; i < args.length; i++) {
             Object arg = args[i];
             Class myPType = myParameters[i].getType();
-            Class effectivePType = effectiveMethod == null ? null : effectiveMethod.getParameters()[i].getType();
-
             if (!myPType.isAssignableFrom(arg.getClass())) {
-                return false;
-            }
-
-            if (effectivePType != null && !effectivePType.isAssignableFrom(myPType)) {
+              //  System.out.println(" > "+myPType.getName()+ " not suibtable with " + arg.getClass().getName());
                 return false;
             }
         }
         return true;
     }
+
+
+
+
+    public boolean isMoreSpecialized(Object[] args, GFMethod otherMethod) {
+        if (isSuibtable(args) && otherMethod == null)
+            return true;
+
+        if (isSuibtable(args) && !isSuibtable(args))
+            return true;
+
+        Parameter[] myParameters = getParameters();
+
+        for (int i = 0; i < args.length; i++) {
+            Class myPType = myParameters[i].getType();
+            Class otherPType = otherMethod.getParameters()[i].getType();
+            //System.out.println("Comparing: "+myPType.getName()+" with " + otherPType.getName());
+
+            // if they're the same class can't be more specialized
+            if(myPType.equals(otherPType)){
+              //  System.out.println(" > They're the same");
+                continue;
+            }
+
+
+            // This means myPType extends/implements otherType therefor is more specialized
+           if(otherPType.isAssignableFrom(myPType)) {
+            //   System.out.println(" > "+myPType.getName()+" is more specialized then " + otherPType.getName());
+               return true;
+            }else{
+          //     System.out.println(" > "+otherPType.getName()+" is more specialized " + myPType.getName());
+               return false;
+           }
+
+        }
+        // If we get here all parameters between this and the other GFMethod are the same Class
+        //System.out.println(" > All the same");
+        return false;
+    }
+
 
     public Object invoke(Object[] args) {
         try {

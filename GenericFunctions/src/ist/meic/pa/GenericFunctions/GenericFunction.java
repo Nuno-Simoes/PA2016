@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.stream.Collectors;
 
 /*
  * FIXME: REMOVE THESE DOUBTS!!!
@@ -24,21 +25,47 @@ public class GenericFunction {
     }
 
     public Object call(Object... subArgs) {
-        GFMethod effectiveMethod = null;
+        Object result = null;
 
-        for (GFMethod method : mMethods) {
-            if (method.isMoreSpecialized(subArgs, effectiveMethod)) {
-                effectiveMethod = method;
+        // Before methods
+        {
+            List<GFMethod> beforeMethods = orderSpecializedMethods(mBeforeMethods, subArgs);
+            for (GFMethod method : beforeMethods)
+                method.invoke(subArgs);
+        }
+
+        // Main method
+        {
+            List<GFMethod> mainMethods = orderSpecializedMethods(mMethods, subArgs);
+            if (mainMethods.size() < 1) {
+                throwError(subArgs);
+            }
+            result = mainMethods.get(0).invoke(subArgs);
+        }
+
+        // After methods
+        {
+            List<GFMethod> afterMethods = orderSpecializedMethods(mAfterMethods, subArgs);
+            for (int i = afterMethods.size() - 1; i >= 0; i--) {
+                GFMethod method = afterMethods.get(i);
+                method.invoke(subArgs);
             }
         }
 
-        if (effectiveMethod == null) {
-            throwError(subArgs);
-        }
-
-
-        return effectiveMethod.invoke(subArgs);
+        return result;
     }
+
+
+    private List<GFMethod> orderSpecializedMethods(final List<GFMethod> methods, final Object[] params) {
+
+        return methods.stream().filter(gfMethod -> gfMethod.isSuibtable(params)).sorted((meth1, meth2) -> {
+            if (meth1.isMoreSpecialized(params, meth2))
+                return -1;
+            else
+                return 1;
+        }).collect(Collectors.toList());
+    }
+
 
     private void throwError(Object... args) {
         String argsFormat = "";
@@ -67,11 +94,11 @@ public class GenericFunction {
     }
 
     public void addBeforeMethod(GFMethod method) {
-
+        mBeforeMethods.add(method);
     }
 
     public void addAfterMethod(GFMethod method) {
-
+        mAfterMethods.add(method);
     }
 
     public static void main(String[] args) throws IOException {
