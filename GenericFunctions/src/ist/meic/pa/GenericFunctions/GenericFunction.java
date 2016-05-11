@@ -66,7 +66,7 @@ public class GenericFunction {
 
 
     private void throwError(Object... args) {
-        String argsFormat = "";
+        String argsFormat = Arrays.deepToString(args);
         String classesFormat = "";
 
 
