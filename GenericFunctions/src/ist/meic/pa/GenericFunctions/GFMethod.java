@@ -102,4 +102,38 @@ public class GFMethod {
             return null;
         }
     }
+
+
+    @Override
+    public int hashCode() {
+        int hash = 17;
+
+        for (Parameter param : getParameters()){
+            hash = hash * 31 + param.getType().hashCode();
+        }
+
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null || !(obj instanceof GFMethod))
+            return false;
+
+        GFMethod other = (GFMethod) obj;
+
+        Parameter[] myParameters = this.getParameters();
+        Parameter[] hisParameters = other.getParameters();
+
+        if (myParameters.length != hisParameters.length)
+            return false;
+
+        for (int i = 0; i < myParameters.length; i++) {
+            if (!myParameters[i].getType().equals(hisParameters[i].getType()))
+                return false;
+
+        }
+
+        return true;
+    }
 }
