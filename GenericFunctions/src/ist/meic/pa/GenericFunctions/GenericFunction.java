@@ -2,9 +2,7 @@ package ist.meic.pa.GenericFunctions;
 
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /*
@@ -13,15 +11,15 @@ import java.util.stream.Collectors;
  */
 public class GenericFunction {
     private final String mName;
-    private final List<GFMethod> mMethods;
-    private final List<GFMethod> mBeforeMethods;
-    private final List<GFMethod> mAfterMethods;
+    private final Set<GFMethod> mMethods;
+    private final Set<GFMethod> mBeforeMethods;
+    private final Set<GFMethod> mAfterMethods;
 
     public GenericFunction(String name) {
         mName = name;
-        mMethods = new ArrayList<>();
-        mBeforeMethods = new ArrayList<>();
-        mAfterMethods = new ArrayList<>();
+        mMethods = new HashSet<>();
+        mBeforeMethods = new HashSet<>();
+        mAfterMethods = new HashSet<>();
     }
 
     public Object call(Object... subArgs) {
@@ -56,7 +54,7 @@ public class GenericFunction {
     }
 
 
-    private List<GFMethod> orderSpecializedMethods(final List<GFMethod> methods, final Object[] params) {
+    private List<GFMethod> orderSpecializedMethods(final Set<GFMethod> methods, final Object[] params) {
 
         return methods.stream().filter(gfMethod -> gfMethod.isSuibtable(params)).sorted((meth1, meth2) -> {
             if (meth1.isMoreSpecialized(params, meth2))
@@ -90,14 +88,24 @@ public class GenericFunction {
 
 
     public void addMethod(GFMethod method) {
+
+        if(mMethods.contains(method))
+            mMethods.remove(method);
+
         mMethods.add(method);
     }
 
     public void addBeforeMethod(GFMethod method) {
+        if(mBeforeMethods.contains(method))
+            mBeforeMethods.remove(method);
+
         mBeforeMethods.add(method);
     }
 
     public void addAfterMethod(GFMethod method) {
+        if(mAfterMethods.contains(method))
+            mAfterMethods.remove(method);
+
         mAfterMethods.add(method);
     }
 
