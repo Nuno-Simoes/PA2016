@@ -12,14 +12,12 @@
 
     <target name="compile" depends="clean">
         <mkdir dir="build/classes"/>
-        <javac target="1.7" srcdir="src" classpathref="dependencies" destdir="build/classes"/>
+        <javac target="1.8" srcdir="src" classpathref="dependencies" destdir="build/classes"/>
     </target>
 
     <target name="jar" depends="compile">
 
         <jar destfile="${jarName}" basedir="build/classes">
-            <!-- I guess this is the safest bet -->
-            <zipgroupfileset dir="lib" includes="*.jar"/>
             <manifest>
                 <attribute name="Main-Class" value="ist.meic.pa.GenericFunctions"/>
             </manifest>
