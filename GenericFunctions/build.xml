@@ -1,10 +1,6 @@
 <project default="jar">
     <property name="jarName" value=".\genericFunctions.jar"/>
-
-    <path id="dependencies">
-    </path>
-
-
+	
     <target name="clean">
         <delete dir="build"/>
         <delete file="${jarName}"/>
@@ -12,14 +8,14 @@
 
     <target name="compile" depends="clean">
         <mkdir dir="build/classes"/>
-        <javac target="1.8" srcdir="src" classpathref="dependencies" destdir="build/classes"/>
+        <javac target="1.8" srcdir="src" destdir="build/classes"/>
     </target>
 
     <target name="jar" depends="compile">
-
+    	
         <jar destfile="${jarName}" basedir="build/classes">
             <manifest>
-                <attribute name="Main-Class" value="ist.meic.pa.GenericFunctions"/>
+            	<attribute name="Main-Class" value="ist.meic.pa.GenericFunctions.GenericFunction"/>
             </manifest>
         </jar>
     </target>
