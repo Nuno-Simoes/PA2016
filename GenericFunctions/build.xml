@@ -1,0 +1,27 @@
+<project default="jar">
+    <property name="jarName" value=".\genericFunctions.jar"/>
+	
+    <target name="clean">
+        <delete dir="build"/>
+        <delete file="${jarName}"/>
+    </target>
+
+    <target name="compile" depends="clean">
+        <mkdir dir="build/classes"/>
+        <javac target="1.8" srcdir="src" destdir="build/classes"/>
+    </target>
+
+    <target name="jar" depends="compile">
+    	
+        <jar destfile="${jarName}" basedir="build/classes">
+            <manifest>
+            	<attribute name="Main-Class" value="ist.meic.pa.GenericFunctions.GenericFunction"/>
+            </manifest>
+        </jar>
+    </target>
+
+    <target name="run" depends="jar">
+        <java jar="${jarName}" fork="true"/>
+    </target>
+
+</project>
