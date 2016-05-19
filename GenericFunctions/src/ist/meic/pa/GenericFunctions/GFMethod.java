@@ -41,7 +41,10 @@ public class GFMethod {
 
     public boolean isSuibtable(Object[] args) {
         Parameter[] myParameters = getParameters();
-
+        
+        if(args.length != myParameters.length)
+            return false;
+        
         for (int i = 0; i < args.length; i++) {
             Object arg = args[i];
             Class myPType = myParameters[i].getType();
@@ -60,7 +63,7 @@ public class GFMethod {
         if (isSuibtable(args) && otherMethod == null)
             return true;
 
-        if (isSuibtable(args) && !isSuibtable(args))
+        if (isSuibtable(args) && !otherMethod.isSuibtable(args))
             return true;
 
         Parameter[] myParameters = getParameters();
